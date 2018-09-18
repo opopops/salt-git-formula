@@ -1,0 +1,19 @@
+git:
+
+  config:
+    gituser:
+      user.email:
+        value: foo@bar.net
+
+  clone:
+    config:
+      force_reset: True
+    users:
+      gituser:
+        https://mydomain.tld/apps/foo.git:
+          directory:
+            name: /opt/foo
+            mode: 755
+            group: gituser
+          config:
+            rev: master
