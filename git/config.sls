@@ -3,8 +3,8 @@
 include:
   - git.install
 
-{%- if 'config' in git %}
-  {%- for user, params in git.config.get('users', {}).items() %}
+{%- for user, config in git.get('config', {}).items() %}
+  {%- for key, params in config.items() %}
 
 git_config_{{user}}_{{key}}:
   git.config_set:
@@ -16,4 +16,4 @@ git_config_{{user}}_{{key}}:
       - sls: git.install
 
   {%- endfor %}
-{%- endif %}
+{%- endfor %}

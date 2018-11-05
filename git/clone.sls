@@ -4,30 +4,19 @@ include:
   - git.install
   - git.config
 
-{%- if 'clone' in git %}
-  {%- for user, repos in git.clone.get('users', {}).items() %}
-    {%- for repo, params in repos.items() %}
-      {%- set repo_name = params.name|default(repo) %}
-      {%- set config    = git.clone.get('config', {}) %}
-      {%- do config.update(params.get('config', {})) %}
+{%- for user, repos in git.get('clone', {}).items() %}
+  {%- for repo, params in repos.items() %}
+    {%- set repo_name = params.get('name', repo) %}
+
 git_clone_{{user}}_{{repo}}:
-  file.directory:
-    - name: {{params.target.name}}
-    - user: {{user}}
-    {%- if params.target.get('group', False) %}
-    - group: {{params.target.group}}
-    {%- endif %}
-    {%- if params.target.get('mode', False) %}
-    - mode: {{params.target.mode}}
-    {%- endif %}
-  git.latest:
+  git.cloned:
     - name: {{repo_name}}
-    - target: {{params.target.name}}
     - user: {{user}}
-    {%- for k, v in config.items() %}
+    {%- for k, v in params.items() %}
+      {%- if k not in ['name', 'user'] %}
     - {{k}}: {{v}}
+      {%- endif %}
     {%- endfor %}
 
-    {%- endfor %}
   {%- endfor %}
-{%- endif %}
+{%- endfor %}
