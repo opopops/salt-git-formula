@@ -9,8 +9,10 @@ include:
 git_config_{{user}}_{{key}}:
   git.config_set:
     - name: {{key}}
+    - user: {{user}}
+    - global: {{params.get('global', True)}}
     {%- for k, v in params.items() %}
-    - {{k}}: {{v}}
+    - {{k}}: '{{v}}'
     {%- endfor %}
     - require:
       - sls: git.install
